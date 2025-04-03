@@ -55,11 +55,11 @@ onMounted(() => {
     v-if="!noPermission && !noSupport"
     class="relative h-[calc(100vh-64px)] lg:h-[calc(100vh-76px)] lg:min-h-[600px] min-h-[600px] max-w-[400px] my-0 mx-auto"
   >
-    <div class="overflow-hidden">
+    <!-- <div class="overflow-hidden">
       <div class="flex items-center flex-row-reverse gap-2 px-4 pt-4 h-[86px] overflow-auto">
         <ColorCard v-for="(cur, index) in colorHistory" :color="cur" @delete="() => {colorHistory && colorHistory.splice(index, 1)}" />
       </div>
-    </div>
+    </div> -->
     <div class="relative p-4">
       <div class="w-[1px] h-[1px] bg-black absolute top-1/2 left-1/2">
         <!-- 倒三角形 -->
@@ -83,12 +83,12 @@ onMounted(() => {
       </div>
       <div class="w-10 h-10 rounded bg-transparent"></div>
     </div>
+    <UDialog :visible="historyVisible" @close="historyVisible = false">
+      <div class="w-full p-2 grid grid-cols-4 gap-4 max-h-[400px] overflow-auto">
+        <ColorCard v-for="(cur, index) in colorHistory" :color="cur" @delete="() => {colorHistory && colorHistory.splice(index, 1)}" />
+      </div>
+    </UDialog>
   </div>
-  <UDialog :visible="historyVisible" @close="historyVisible = false">
-    <div class="w-full p-2 grid grid-cols-4 gap-4 max-h-[400px] overflow-auto">
-      <ColorCard v-for="(cur, index) in colorHistory" :color="cur" @delete="() => {colorHistory && colorHistory.splice(index, 1)}" />
-    </div>
-  </UDialog>
 </template>
 <style>
 .color-box {

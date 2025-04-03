@@ -5,15 +5,17 @@ const props = withDefaults(
   defineProps<{
     imageUrl: string;
     zoom?: number;
-    mode?: "magnify" | "shrink" | "blur" | "funny";
+    mode?: "magnify" | "shrink" | "blur" | "funny" | "mosaic";
     blurAmount?: number; // 模糊程度
     funnyType?: "squeeze" | "stretch" | "wave"; // 哈哈镜类型
+    mosaicSize?: number; // 马赛克大小
   }>(),
   {
     zoom: 2,
     mode: "magnify",
     blurAmount: 5, // 默认模糊度
     funnyType: "squeeze",
+    mosaicSize: 10, // 默认马赛克大小
   }
 );
 
@@ -27,6 +29,10 @@ const lens = reactive({
   width: 100,
   height: 100,
 });
+
+// 创建马赛克效果的 canvas
+const canvasRef = ref<HTMLCanvasElement | null>(null);
+const mosaicImageData = ref<string | null>(null);
 
 // 检测是否为移动设备
 const isMobile = ref(false);
@@ -45,6 +51,50 @@ const magnifierPos = reactive({
   bgY: 0,
 });
 
+// 生成马赛克效果
+const generateMosaic = () => {
+  if (!imageRef.value || !props.imageUrl) return;
+
+  const img = new Image();
+  img.crossOrigin = "Anonymous"; // 处理跨域问题
+  img.src = props.imageUrl;
+
+  img.onload = () => {
+    if (!canvasRef.value) {
+      canvasRef.value = document.createElement("canvas");
+    }
+
+    const canvas = canvasRef.value;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // 设置 canvas 尺寸
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // 绘制原始图像
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+    // 应用马赛克效果
+    const size = props.mosaicSize;
+    for (let y = 0; y < img.height; y += size) {
+      for (let x = 0; x < img.width; x += size) {
+        // 获取当前块的颜色
+        const data = ctx.getImageData(x, y, 1, 1).data;
+
+        // 填充整个块
+        ctx.fillStyle = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${
+          data[3] / 255
+        })`;
+        ctx.fillRect(x, y, size, size);
+      }
+    }
+
+    // 将处理后的图像转为 data URL
+    mosaicImageData.value = canvas.toDataURL("image/png");
+  };
+};
+
 watch(
   () => props.imageUrl,
   () => {
@@ -60,6 +110,17 @@ watch(
     immediate: true,
     deep: true,
   }
+);
+
+// 监听相关属性变化，重新生成马赛克
+watch(
+  [() => props.imageUrl, () => props.mosaicSize, () => props.mode],
+  () => {
+    if (props.mode === "mosaic") {
+      generateMosaic();
+    }
+  },
+  { immediate: true }
 );
 
 // 统一处理鼠标和触摸事件
@@ -107,11 +168,11 @@ const getFunnyTransform = () => {
   switch (props.funnyType) {
     case "squeeze":
       return "scaleX(0.5) scaleY(1.5)";
-      // 增加整体缩放，并调整挤压比例
+    // 增加整体缩放，并调整挤压比例
     //   return "scale(1.2) scaleX(0.6) scaleY(1.4)";
     case "stretch":
       return "scaleX(1.5) scaleY(0.5)";
-      // 增加整体缩放，并调整拉伸比例
+    // 增加整体缩放，并调整拉伸比例
     //   return "scale(1.2) scaleX(1.4) scaleY(0.6)";
     case "wave":
       // return 'perspective(100px) rotateX(10deg)';
@@ -159,6 +220,7 @@ const getBackgroundSize = computed(() => {
         mode === 'shrink' ? 'shrink' : '',
         mode === 'blur' ? 'blur-border' : '',
         mode === 'funny' ? 'funny' : '',
+        mode === 'mosaic' ? 'mosaic-border' : '',
         funnyType === 'wave' ? 'wave' : '',
         { mobile: isMobile },
       ]"
@@ -171,7 +233,12 @@ const getBackgroundSize = computed(() => {
       <div
         class="magnifier empty-background"
         :style="{
-          backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+          backgroundImage:
+            mode === 'mosaic' && mosaicImageData
+              ? `url(${mosaicImageData})`
+              : imageUrl
+              ? `url(${imageUrl})`
+              : 'none',
           backgroundPosition: `${magnifierPos.bgX}px ${magnifierPos.bgY}px`,
           backgroundSize: getBackgroundSize,
           filter: mode === 'blur' ? `blur(${blurAmount}px)` : 'none',
@@ -255,6 +322,18 @@ const getBackgroundSize = computed(() => {
 .magnifier-border.funny {
   border-color: #ffa500;
   box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
+}
+
+.magnifier-border.mosaic-border {
+  border-color: #9c27b0;
+  box-shadow: 0 0 5px rgba(156, 39, 176, 0.5);
+}
+
+/* 马赛克效果的像素化处理 */
+.mosaic-border .magnifier {
+  image-rendering: pixelated; /* 现代浏览器 */
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: crisp-edges; /* Safari */
 }
 
 @keyframes waveEffect {

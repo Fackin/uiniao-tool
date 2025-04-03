@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import ImageMagnifier from "@/components/ImageMagnifier.vue";
 
-const currentMode = ref<'magnify' | 'shrink' | 'blur' | 'funny'>('magnify');
+const currentMode = ref<'magnify' | 'shrink' | 'blur' | 'funny' | 'mosaic'>('magnify');
 const funnyType = ref<'squeeze' | 'stretch' | 'wave'>('squeeze');
 const blurAmount = ref(5);
 const zoom = ref(2);
@@ -23,7 +23,8 @@ const modes = [
   { value: 'magnify', label: '放大镜' },
   { value: 'shrink', label: '缩小镜' },
   { value: 'blur', label: '模糊镜' },
-  { value: 'funny', label: '哈哈镜' }
+  { value: 'funny', label: '哈哈镜' },
+  { value: 'mosaic', label: '马赛克' }
 ];
 
 const funnyTypes = [
@@ -41,6 +42,7 @@ onMounted(() => {
 });
 
 
+const mosaicSize = ref(10);
 
 
 const handleModeChange = (mode: string) => {
@@ -50,6 +52,9 @@ const handleModeChange = (mode: string) => {
     zoom.value = 1;
   } else if (mode === 'blur') {
     blurAmount.value = 5;
+    zoom.value = 1;
+  } else if (mode === 'mosaic') {
+    mosaicSize.value = 10;
     zoom.value = 1;
   } else {
     zoom.value = 2;
@@ -126,6 +131,21 @@ const handleModeChange = (mode: string) => {
         </div>
       </div>
 
+      <!-- 马赛克控制 -->
+      <div class="control-section" v-if="currentMode === 'mosaic'">
+        <h3>马赛克大小</h3>
+        <div class="slider-group">
+          <input 
+            type="range" 
+            v-model="mosaicSize" 
+            min="5" 
+            max="30" 
+            step="1"
+          >
+          <span class="slider-value">{{ mosaicSize }}px</span>
+        </div>
+      </div>
+
       <!-- 图片上传 -->
       <div class="control-section">
         <h3>更换图片</h3>
@@ -151,6 +171,7 @@ const handleModeChange = (mode: string) => {
         :mode="currentMode"
         :blurAmount="blurAmount"
         :funnyType="funnyType"
+        :mosaicSize="mosaicSize"
       />
     </div>
   </div>

@@ -1,27 +1,48 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+import ThemeSwitcher from "@/layout/ThemeSwitcher.vue";
+import ThemeStyleSwitcher from "@/layout/ThemeStyleSwitcher.vue";
+import IconLanguage from "@/components/icons/IconLanguage.vue";
+import IconColor from "@/components/icons/IconColor.vue";
+import IconGithub from "@/components/icons/IconGithub.vue";
+
+const themeVisible = ref(false);
+</script>
 
 <template>
   <header>
     <div class="logo"><RouterLink to="/">UiNiaO</RouterLink></div>
-    
 
-    <!-- <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/color-camera">colorCamera</RouterLink>
-        <RouterLink to="/dynasty">dynasty</RouterLink>
-      </nav>
-    </div> -->
     <div class="header-right flex justify-center items-center gap-2">
-      <div>语言</div>
-      <div>github</div>
+      <div class="header-link"><IconLanguage class="h-[20px] w-[20px] cursor-pointer" /></div>
+      <!-- <RouterLink to="/theme">theme</RouterLink> -->
+      <div class="header-link" @click="themeVisible = true">
+        <IconColor class="h-[20px] w-[20px] cursor-pointer" />
+      </div>
+      <div class="header-link"><IconGithub class="h-[20px] w-[20px] cursor-pointer" /></div>
     </div>
   </header>
+  <un-drawer :visible="themeVisible" @close="themeVisible = false">
+    <ThemeStyleSwitcher class="w-full mb-3" />
+    <ThemeSwitcher class="w-full" />
+  </un-drawer>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 /*  @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"); */
-@import url('@/assets/fonts/font.css');
+@import url("@/assets/fonts/font.css");
+
+.header-link {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    background-color: var(--color-bghover);
+  }
+}
 
 header {
   width: 100%;
@@ -63,6 +84,13 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 @media (min-width: 1024px) {

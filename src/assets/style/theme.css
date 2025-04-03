@@ -1,0 +1,125 @@
+/* src/assets/css/theme.css */
+
+:root {
+    /* 默认浅色主题变量 */
+    --color-primary: #4285f4;
+    --color-primary-rgb: 66, 133, 244;
+    --color-secondary: #db4437;
+    --color-secondary-rgb: 219, 68, 55;
+    --color-tertiary: #f4b400;
+    --color-tertiary-rgb: 244, 180, 0;
+    --color-quaternary: #0f9d58;
+    --color-quaternary-rgb: 15, 157, 88;
+    --color-background: #ffffff;
+    --color-background-rgb: 255, 255, 255;
+    --color-text: #202124;
+    --color-text-rgb: 32, 33, 36;
+    --color-surface: #f8f9fa;
+    --color-surface-rgb: 248, 249, 250;
+    --color-border: #dadce0;
+    --color-border-rgb: 218, 220, 224;
+    
+    /* 过渡效果 */
+    --transition-theme: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  /* 主题类 */
+  body.theme-light {
+    --color-primary: #4285f4;
+    --color-primary-rgb: 66, 133, 244;
+    --color-secondary: #db4437;
+    --color-secondary-rgb: 219, 68, 55;
+    --color-tertiary: #f4b400;
+    --color-tertiary-rgb: 244, 180, 0;
+    --color-quaternary: #0f9d58;
+    --color-quaternary-rgb: 15, 157, 88;
+    --color-background: #ffffff;
+    --color-background-rgb: 255, 255, 255;
+    --color-text: #202124;
+    --color-text-rgb: 32, 33, 36;
+    --color-surface: #f8f9fa;
+    --color-surface-rgb: 248, 249, 250;
+    --color-border: #dadce0;
+    --color-border-rgb: 218, 220, 224;
+  }
+  
+  body.theme-dark {
+    --color-primary: #8ab4f8;
+    --color-primary-rgb: 138, 180, 248;
+    --color-secondary: #f28b82;
+    --color-secondary-rgb: 242, 139, 130;
+    --color-tertiary: #fdd663;
+    --color-tertiary-rgb: 253, 214, 99;
+    --color-quaternary: #81c995;
+    --color-quaternary-rgb: 129, 201, 149;
+    --color-background: #202124;
+    --color-background-rgb: 32, 33, 36;
+    --color-text: #e8eaed;
+    --color-text-rgb: 232, 234, 237;
+    --color-surface: #303134;
+    --color-surface-rgb: 48, 49, 52;
+    --color-border: #5f6368;
+    --color-border-rgb: 95, 99, 104;
+  }
+  
+  body.theme-blue {
+    --color-primary: #4285f4;
+    --color-primary-rgb: 66, 133, 244;
+    --color-secondary: #5e97f6;
+    --color-secondary-rgb: 94, 151, 246;
+    --color-tertiary: #8ab4f8;
+    --color-tertiary-rgb: 138, 180, 248;
+    --color-quaternary: #c6dafc;
+    --color-quaternary-rgb: 198, 218, 252;
+    --color-background: #e8f0fe;
+    --color-background-rgb: 232, 240, 254;
+    --color-text: #174ea6;
+    --color-text-rgb: 23, 78, 166;
+    --color-surface: #f8faff;
+    --color-surface-rgb: 248, 250, 255;
+    --color-border: #aecbfa;
+    --color-border-rgb: 174, 203, 250;
+  }
+  
+  body.theme-green {
+    --color-primary: #0f9d58;
+    --color-primary-rgb: 15, 157, 88;
+    --color-secondary: #137333;
+    --color-secondary-rgb: 19, 115, 51;
+    --color-tertiary: #1e8e3e;
+    --color-tertiary-rgb: 30, 142, 62;
+    --color-quaternary: #81c995;
+    --color-quaternary-rgb: 129, 201, 149;
+    --color-background: #e6f4ea;
+    --color-background-rgb: 230, 244, 234;
+    --color-text: #0d652d;
+    --color-text-rgb: 13, 101, 45;
+    --color-surface: #f4faf6;
+    --color-surface-rgb: 244, 250, 246;
+    --color-border: #a8dab5;
+    --color-border-rgb: 168, 218, 181;
+  }
+  
+  body.theme-purple {
+    --color-primary: #a142f4;
+    --color-primary-rgb: 161, 66, 244;
+    --color-secondary: #b26ef7;
+    --color-secondary-rgb: 178, 110, 247;
+    --color-tertiary: #c39af8;
+    --color-tertiary-rgb: 195, 154, 248;
+    --color-quaternary: #d4c2f9;
+    --color-quaternary-rgb: 212, 194, 249;
+    --color-background: #f3e8fd;
+    --color-background-rgb: 243, 232, 253;
+    --color-text: #681da8;
+    --color-text-rgb: 104, 29, 168;
+    --color-surface: #f9f2ff;
+    --color-surface-rgb: 249, 242, 255;
+    --color-border: #d7aefb;
+    --color-border-rgb: 215, 174, 251;
+  }
+  
+  /* 应用过渡效果 */
+  body, body * {
+    transition: var(--transition-theme);
+  }

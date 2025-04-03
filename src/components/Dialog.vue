@@ -13,7 +13,7 @@ const emit = defineEmits(["close"]);
 <template>
   <div
     v-if="visible"
-    class="h-full bg-[rgba(0,0,0,0.5)] fixed top-0 left-0 bottom-0 right-0 z-5000"
+    class="h-full bg-[rgba(0,0,0,0.5)] absolute top-0 left-0 bottom-0 right-0 z-5000"
     @click.stop="emit('close')"
   >
     <div
