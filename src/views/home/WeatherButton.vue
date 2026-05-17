@@ -2,6 +2,7 @@
   <!--  @mouseleave="() => (isOpen = false)" -->
   <div class="weather-container">
     <div
+      ref="triggerRef"
       class="weather-widget"
       :class="{ 'widget-hover': isMore }"
       @click.stop="handleClickMore"
@@ -19,11 +20,28 @@
           <div class="date">{{ date }}</div>
         </div>
       </div>
+
+
+      <!-- <un-popover placement="bottom" :autoPlacement="true">
+        <template #trigger>
+          <div class="weather-info">
+            <div class="temperature">{{ temperature }}°</div>
+            <div class="location-info">
+              <div class="location">{{ location }}</div>
+              <div class="date">{{ date }}</div>
+            </div>
+          </div>
+        </template>
+        <template #content>
+          <WeatherCard />
+        </template>
+      </un-popover> -->
+
       <div class="setting-button" @click.stop="handleSetting">
         <Settings class="w-4 h-4" />
       </div>
     </div>
-    <div v-if="isOpen" ref="dropdown" class="dropdown-box">
+    <div v-if="isOpen" ref="dropdown" :style="floatingStyles" class="dropdown-box">
       <WeatherCard :list="forecastList" :link="moreLink" />
     </div>
   </div>
@@ -34,6 +52,19 @@ import { ref, onMounted, watch, onUnmounted } from "vue";
 import WeatherIcon from "@/components/WeatherIcon.vue";
 import WeatherCard from "./WeatherCard.vue";
 import { Settings } from "lucide-vue-next";
+import { createPopper } from "@popperjs/core";
+
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  arrow,
+  size,
+  autoPlacement,
+  hide,
+} from "@floating-ui/vue";
 
 // Weather data
 const temperature = ref("22");
@@ -47,14 +78,66 @@ const moreLink = ref();
 const forecastList = ref([]);
 
 const dropdown = ref();
+const triggerRef = ref(null);
+let popperInstance = null;
 
 const props = defineProps({
   isParentDragging: Function,
 });
 
+const { floatingStyles } = useFloating(triggerRef, dropdown, {
+  placement: 'bottom',
+  whileElementsMounted: autoUpdate,
+  middleware: [
+    offset(8),
+    autoPlacement(),
+    // flip(),
+    shift({ padding: 8 }),
+    // arrow({ element: arrowRef, padding: props.arrowPadding }),
+    // size({
+    //   apply({ availableWidth, availableHeight, elements }) {
+    //     elements.floating.style.maxWidth = `${Math.min(
+    //       availableWidth,
+    //       props.maxWidth
+    //     )}px`;
+    //     elements.floating.style.maxHeight = `${Math.min(
+    //       availableHeight,
+    //       props.maxHeight
+    //     )}px`;
+    //     elements.floating.style.overflow = "auto";
+    //   },
+    // }),
+    hide({ strategy: "referenceHidden" }),
+  ],
+});
+
+const createPopperInstance = () => {
+  if (triggerRef.value && dropdown.value) {
+    // popperInstance = createPopper(triggerRef.value, dropdown.value, {
+    //   placement: "bottom-end",
+    //   modifiers: [
+    //     { name: "preventOverflow", options: { rootBoundary: "viewport" } },
+    //     { name: "flip", options: { fallbackPlacements: ["bottom-start"], rootBoundary: "viewport" } },
+    //   ],
+    // });
+
+  
+    // useFloating(triggerRef.value, dropdown.value, {
+    //   placement: 'right',
+    //   middleware: [offset(10), flip(), shift()],
+    // });
+  }
+};
+
+const destroyPopperInstance = () => {
+  if (popperInstance) {
+    popperInstance.destroy();
+    popperInstance = null;
+  }
+};
+
 const handleClickMore = (e) => {
-  console.log(props.isParentDragging());
-  if (props.isParentDragging()) {
+  if (props.isParentDragging && props.isParentDragging()) {
     e.stopPropagation();
     return;
   }
@@ -65,12 +148,18 @@ const handleClickMore = (e) => {
   }
 };
 
-const handleOpenCard = () => {
-  if (props.isParentDragging()) {
+const handleOpenCard = (e) => {
+  if (props.isParentDragging && props.isParentDragging()) {
     e.stopPropagation();
     return;
   }
   isOpen.value = !isOpen.value;
+
+  if (isOpen.value) {
+    createPopperInstance();
+  } else {
+    destroyPopperInstance();
+  }
 };
 
 // 监听外部点击，关闭下拉框
@@ -136,6 +225,8 @@ onMounted(() => {
   // Simulate fetching weather data
   console.log("Fetching initial weather data...");
   getWeather();
+  
+
 });
 
 watch(
@@ -150,12 +241,14 @@ watch(
     } else {
       console.log("toggleDropdown removeEventListener");
       document.removeEventListener("click", handleClickOutside);
+      destroyPopperInstance();
     }
   }
 );
 
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
+  destroyPopperInstance();
 });
 </script>
 
@@ -166,11 +259,10 @@ onUnmounted(() => {
 }
 .dropdown-box {
   position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 1000;
+  /* top: 100%;
+  left: 0; */
+  z-index: 100;
   width: max-content;
-  /* box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); */
   border-radius: 8px;
   overflow: hidden;
 }

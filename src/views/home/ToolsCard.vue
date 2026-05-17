@@ -228,6 +228,13 @@ const websites = [
     icon: IconDynasty,
     category: "social",
   },
+  {
+    id: 17,
+    name: "Comp Demo",
+    url: "/component-demo",
+    icon: IconDynasty,
+    category: "social",
+  },
 
   // // 娱乐
   // {

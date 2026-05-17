@@ -93,6 +93,11 @@ const router = createRouter({
       component: () => import('../views/UrlFavicon.vue'),
     },
     {
+      path: '/component-demo',
+      name: 'component-demo',
+      component: () => import('../views/demo/ComponentDemo.vue'),
+    },
+    {
       path: '/theme',
       name: 'theme',
       component: () => import('../views/ThemeView.vue'),

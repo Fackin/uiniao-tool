@@ -4,6 +4,8 @@ import { RouterView } from "vue-router";
 import Header from "./layout/header.vue";
 import Nav from "./layout/nav.vue";
 import WebsiteBackground from "@/layout/WebsiteBackground.vue";
+import DraggableButton from "@/components/DraggableButton.vue";
+import WeatherButton from "@/views/home/WeatherButton.vue";
 
 // 背景样式
 const backgroundStyle = ref(localStorage.getItem("backgroundStyle") || "grid");
@@ -28,7 +30,7 @@ onMounted(() => {
 });
 
 const changeBackground = (style: string) => {
-  console.log(style, 'changeBackground');
+  console.log(style, "changeBackground");
   backgroundStyle.value = style;
   localStorage.setItem("backgroundStyle", style);
 };
@@ -48,7 +50,16 @@ provide("backgroundStyle", {
 
 <template>
   <un-alert />
-  <WebsiteBackground :styleType="backgroundStyle" :bgImg="backgroundImg" class="overflow-hidden">
+  <WebsiteBackground
+    :styleType="backgroundStyle"
+    :bgImg="backgroundImg"
+    class="overflow-hidden"
+  >
+    <DraggableButton v-slot="slotProps">
+      <WeatherButton :is-parent-dragging="slotProps.isParentDragging" />
+    </DraggableButton>
+
+    <!-- <WeatherButton /> -->
     <Header />
     <!-- <div class="min-h-[calc(100vh-64px)] lg:min-h-[calc(100vh-76px)]">
       <RouterView />

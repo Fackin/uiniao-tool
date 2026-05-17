@@ -11,6 +11,9 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.6",
+    "@popperjs/core": "^2.11.8",
+    "@vue/runtime-core": "^3.5.13",
     "@vueuse/motion": "^3.0.3",
     "canvg": "^4.0.3",
     "framer-motion": "^12.5.0",

@@ -1,15 +1,14 @@
 <template>
   <div class="w-full bg-gradient md:p-8">
     <div class="mx-auto space-y-8">
-      <DraggableButton v-slot="slotProps">
+      <!-- <DraggableButton v-slot="slotProps">
         <WeatherButton :is-parent-dragging="slotProps.isParentDragging" />
-      </DraggableButton>
-      <div class="text-right">
+      </DraggableButton> -->
+      <!-- <div class="text-right">
         <WeatherButton />
-      </div>
+      </div> -->
       <!-- Header -->
       <header class="text-center pb-4">
-        <h1 class="text-3xl font-bold">My Dashboard</h1>
         <p>{{ currentDate }}</p>
       </header>
 
@@ -58,8 +57,13 @@
         </div>
       </div>
 
+      <VideoPip />
+
       <!-- Main Content Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <DateTimeDisplay />
+        <PersonalizedDateDisplay />
+        <InteractiveCalendarDisplay />
         <!-- Calendar -->
         <div class="glass-card p-6">
           <h2 class="text-xl font-semibold mb-4 flex items-center">
@@ -205,6 +209,10 @@ import {
 import WeatherIcon from "@/components/WeatherIcon.vue";
 import WeatherButton from "./WeatherButton.vue";
 import DraggableButton from "@/components/DraggableButton.vue";
+import DateTimeDisplay from "./calendar/DateTimeDisplay.vue"
+import PersonalizedDateDisplay from "./calendar/PersonalizedDateDisplay.vue"
+import InteractiveCalendarDisplay from "./calendar/InteractiveCalendarDisplay.vue"
+import VideoPip from "@/components/VideoPip.vue";
 
 // Search functionality
 const searchEngines = [

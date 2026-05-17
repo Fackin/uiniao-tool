@@ -22,7 +22,16 @@ const loadPosition = () => {
   if (savedPosition) {
     return JSON.parse(savedPosition);
   }
-  return { x: 100, y: 100 };
+  const defaultPos = { x: -110, y: 100 };
+
+  const { innerWidth, innerHeight } = window;
+
+  const x =
+    defaultPos.x > 0 ? defaultPos.x : innerWidth - Math.abs(defaultPos.x);
+  const y =
+    defaultPos.y > 0 ? defaultPos.y : innerHeight - Math.abs(defaultPos.y);
+
+  return { x, y };
 };
 
 // 保存位置信息到本地存储
@@ -44,7 +53,7 @@ const draggableButton = computed(() => {
     top: `${position.value.y}px`,
     bottom: "auto",
     cursor: isDragging.value ? "grabbing" : "grab",
-    zIndex: 1000,
+    zIndex: 60,
   } as any;
   if (position.value.x < 0) {
     defaultStyle.left = "0px";
@@ -81,7 +90,7 @@ const startDrag = (e: any) => {
   const clientY = e.clientY ?? e.touches[0].clientY;
 
   console.log("开始拖拽父组件", isDragging.value);
-//   isDragging.value = true;
+  //   isDragging.value = true;
   startPos.value = {
     x: clientX - position.value.x,
     y: clientY - position.value.y,
@@ -131,13 +140,13 @@ const stopDrag = (e: any) => {
   if (isDragging.value) {
     e.stopPropagation(); // 阻止事件冒泡
   }
-  console.log("停止拖拽父组件--isDragging‰" , isDragging.value );
-  if (isDragging.value){
-      console.log("停止拖拽父组件");
-      setTimeout(() => {
-          isDragging.value = false;
-          console.log("停止拖拽父组件--isDragging‰" , isDragging.value );
-      }, 50);
+  console.log("停止拖拽父组件--isDragging‰", isDragging.value);
+  if (isDragging.value) {
+    console.log("停止拖拽父组件");
+    setTimeout(() => {
+      isDragging.value = false;
+      console.log("停止拖拽父组件--isDragging‰", isDragging.value);
+    }, 50);
   }
   savePosition(position.value.x, position.value.y);
   document.removeEventListener("mousemove", onDrag);
